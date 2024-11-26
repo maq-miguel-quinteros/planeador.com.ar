@@ -66,6 +66,8 @@ INSTALLED_APPS = [
     'rest_framework',
     # para evitar errores de cors
     'corsheaders',
+    # app para register y login de usuarios
+    'users',
 ]
 
 MIDDLEWARE = [
