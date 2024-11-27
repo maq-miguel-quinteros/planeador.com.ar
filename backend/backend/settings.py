@@ -68,6 +68,8 @@ INSTALLED_APPS = [
     'corsheaders',
     # app para register y login de usuarios
     'users',
+    # app para los planes de clase
+    'lessons',
 ]
 
 MIDDLEWARE = [

@@ -224,3 +224,62 @@ urlpatterns = [
 python manage.py makemigrations
 python manage.py migrate
 ```
+
+## Lessons app
+
+### Create & config
+
+```shellscript
+cd backend
+python manage.py startapp lessons # for lesson plan
+```
+
+`settings.py` in `backend`
+
+```py3
+INSTALLED_APPS = [
+    #...
+    # lesson plan app
+    'lessons',
+]
+```
+
+### Model
+
+```py3
+from django.db import models
+from django.contrib.auth.models import User
+
+class Lesson(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    applicated_at = models.DateTimeField()
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE(), related_name='lessons')
+
+    def __srt__(self):
+        return self.title
+```
+
+### Serializer
+
+At `lessons` create `serializers.py`
+
+```py3
+from rest_framework import serializers
+from .models import Lesson
+
+class LessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ['id', 'title', 'content', 'created_at', 'applicated_at', 'teacher']
+        extra_kwargs = {'teacher': {'read_only': True}}
+```
+
+### Views
+
+`views.py` in `lessons`
+
+```py3
+
+```
