@@ -170,8 +170,57 @@ class UserSerializer(serializers.ModelSerializer):
 
 ### Views
 
-At `users` create `views.py`
+`views.py` in `users`
 
 ```py3
+from django.shortcuts import render
+from django.contrib.auth.models import User
+from rest_framework import generics
+from .serializers import UserSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
+class UserCreateView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+```
+
+### Urls
+
+At `users` create `urls.py`
+
+```py3
+from django.urls import path
+from .views import UserCreateView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+urlpatterns = [
+    path('user/register/', UserCreateView.as_view(), name='register'),
+    path('token/', TokenObtainPairView.as_view(), name='token'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='refresh'),
+]
+```
+
+### Include urls
+
+`urls.py` in `backend`
+
+```py3
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    # urls from users app
+    path('api/', include('users.urls')),
+    # urls for api-auth/login/ & api-auth/logout
+    path("api-auth/", include("rest_framework.urls")),
+]
+```
+
+### Makemigrations & migrate
+
+```shellscript
+python manage.py makemigrations
+python manage.py migrate
 ```
